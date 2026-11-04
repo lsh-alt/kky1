@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Tense Master P6 - 時態大冒險</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome CDN for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Nunito', sans-serif;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #db2777 100%);
+            min-height: 100vh;
+        }
+
+        .font-heading {
+            font-family: 'Fredoka', sans-serif;
+        }
+
+        /* Glassmorphism Card Style */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 2px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        /* iPad / Mobile Active Feedback */
+        .btn-touch {
+            transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.15s ease;
+        }
+        .btn-touch:active {
+            transform: scale(0.96);
+        }
+
+        /* Custom Animations */
+        @keyframes popIn {
+            0% { transform: scale(0.85); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .animate-pop {
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-8px); }
+            40%, 80% { transform: translateX(8px); }
+        }
+        .animate-shake {
+            animation: shake 0.4s ease-in-out;
+        }
+
+        /* Pulse for streak */
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 15px rgba(251, 191, 36, 0.6); }
+            50% { box-shadow: 0 0 30px rgba(251, 191, 36, 0.9); }
+        }
+        .streak-glow {
+            animation: pulseGlow 1.5s infinite;
+        }
+    </style>
+</head>
+<body class="p-3 md:p-6 flex items-center justify-center">
+
+    <!-- Main Container -->
+    <div id="game-container" class="w-full max-w-4xl min-h-[90vh] flex flex-col justify-between relative overflow-hidden rounded-3xl">
+
+        <!-- ================= START SCREEN ================= -->
+        <div id="start-screen" class="glass-card rounded-3xl p-6 md:p-10 flex flex-col items-center justify-center text-center my-auto animate-pop">
+            <div class="inline-flex items-center justify-center w-24 h-24 bg-indigo-100 rounded-full text-indigo-600 text-5xl mb-4 shadow-inner">
+                <i class="fa-solid fa-graduation-cap"></i>
+            </div>
+            
+            <h1 class="font-heading text-4xl md:text-5xl font-bold text-indigo-950 mb-2">
+                Tense Master P6
+            </h1>
+            <h2 class="text-xl md:text-2xl font-bold text-purple-700 mb-6">
+                時態大冒險 (Longman LEAP 6A 溫習專區)
+            </h2>
+
+            <!-- Scope Badges -->
+            <div class="flex flex-wrap justify-center gap-2 mb-8 max-w-xl">
+                <span class="bg-indigo-100 text-indigo-800 text-sm font-bold px-3 py-1.5 rounded-full border border-indigo-300">
+                    <i class="fa-solid fa-clock mr-1"></i> Present Simple vs Cont.
+                </span>
+                <span class="bg-purple-100 text-purple-800 text-sm font-bold px-3 py-1.5 rounded-full border border-purple-300">
+                    <i class="fa-solid fa-history mr-1"></i> Past Simple vs Cont.
+                </span>
+                <span class="bg-pink-100 text-pink-800 text-sm font-bold px-3 py-1.5 rounded-full border border-pink-300">
+                    <i class="fa-solid fa-star mr-1"></i> Present Perfect (since/for/yet)
+                </span>
+                <span class="bg-amber-100 text-amber-800 text-sm font-bold px-3 py-1.5 rounded-full border border-amber-300">
+                    <i class="fa-solid fa-code-branch mr-1"></i> Conditional Type 1
+                </span>
+            </div>
+
+            <div class="bg-amber-50 border-2 border-amber-200 rounded-2xl p-4 mb-8 text-left max-w-md w-full">
+                <h3 class="font-bold text-amber-900 text-base mb-2 flex items-center">
+                    <i class="fa-solid fa-lightbulb text-amber-500 mr-2 text-xl"></i> 遊戲說明 / Instructions:
+                </h3>
+                <ul class="text-amber-800 text-sm space-y-1 font-semibold">
+                    <li>? 答對獲得分數，連續答對觸發 **?? Combo 加倍獎勵**！</li>
+                    <li>? 包含選擇題、時間詞配對、以及條件句組句挑戰。</li>
+                    <li>? 每題均附有 **關鍵時間詞 (Signal Words)** 中英詳細解析！</li>
+                </ul>
+            </div>
+
+            <button id="start-btn" onclick="startGame()" class="btn-touch w-full max-w-xs bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-heading text-2xl font-bold py-4 px-8 rounded-2xl shadow-xl flex items-center justify-center gap-3 border-b-4 border-teal-800">
+                <i class="fa-solid fa-play"></i> 開始挑戰 Start Game
+            </button>
+        </div>
+
+        <!-- ================= GAMEPLAY SCREEN ================= -->
+        <div id="game-screen" class="hidden flex-col h-full justify-between gap-4">
+            
+            <!-- TOP BAR / HUD -->
+            <div class="glass-card rounded-2xl p-4 flex items-center justify-between shadow-lg">
+                <!-- Lives -->
+                <div class="flex items-center gap-1.5" id="lives-container">
+                    <i class="fa-solid fa-heart text-red-500 text-2xl"></i>
+                    <i class="fa-solid fa-heart text-red-500 text-2xl"></i>
+                    <i class="fa-solid fa-heart text-red-500 text-2xl"></i>
+                </div>
+
+                <!-- Progress Bar & Question Counter -->
+                <div class="flex flex-col items-center flex-1 mx-4">
+                    <div class="flex justify-between w-full max-w-md mb-1 px-1">
+                        <span id="q-progress-text" class="text-xs font-extrabold text-indigo-900 uppercase">Question 1 / 10</span>
+                        <span id="streak-badge" class="hidden bg-amber-400 text-amber-950 text-xs font-black px-2 py-0.5 rounded-full streak-glow">
+                            ?? COMBO x<span id="streak-count">1</span>
+                        </span>
+                    </div>
+                    <div class="w-full max-w-md bg-gray-200 h-3 rounded-full overflow-hidden shadow-inner">
+                        <div id="progress-bar" class="bg-gradient-to-r from-indigo-500 to-purple-500 h-full w-0 transition-all duration-300 rounded-full"></div>
+                    </div>
+                </div>
+
+                <!-- Score & Sound Toggle -->
+                <div class="flex items-center gap-3">
+                    <div class="bg-indigo-100 border border-indigo-300 rounded-xl px-3 py-1 text-center">
+                        <div class="text-[10px] font-bold text-indigo-500 uppercase leading-none">Score</div>
+                        <div id="score-text" class="text-xl font-black text-indigo-900">0</div>
+                    </div>
+                    <button id="sound-btn" onclick="toggleSound()" class="w-10 h-10 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-700 flex items-center justify-center text-lg shadow-sm border border-gray-300">
+                        <i class="fa-solid fa-volume-high"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- QUESTION CONTAINER CARD -->
+            <div id="question-card" class="glass-card rounded-3xl p-6 md:p-8 flex-1 flex flex-col justify-between my-2 relative">
+                <!-- Question Header / Type Tag -->
+                <div class="flex items-center justify-between mb-4">
+                    <span id="question-tag" class="bg-indigo-600 text-white text-xs font-bold px-3 py-1 rounded-lg uppercase tracking-wider">
+                        Multiple Choice
+                    </span>
+                    <span id="grammar-topic" class="text-xs font-bold text-indigo-700 bg-indigo-50 px-2.5 py-1 rounded-md border border-indigo-200">
+                        Topic: Present Perfect
+                    </span>
+                </div>
+
+                <!-- Dynamic Question Body Area -->
+                <div id="question-body" class="flex-1 flex flex-col justify-center">
+                    <!-- Content injected via JavaScript -->
+                </div>
+
+                <!-- Explanation Panel (Initially Hidden) -->
+                <div id="explanation-modal" class="hidden mt-4 bg-emerald-50 border-2 border-emerald-300 rounded-2xl p-4 text-emerald-950 animate-pop">
+                    <div class="flex items-start gap-3">
+                        <div id="explanation-icon" class="text-2xl text-emerald-600 mt-0.5">
+                            <i class="fa-solid fa-circle-check"></i>
+                        </div>
+                        <div class="flex-1 text-sm">
+                            <h4 id="explanation-title" class="font-extrabold text-base mb-1 text-emerald-900">Correct! 正確！</h4>
+                            <p id="explanation-text-en" class="font-bold text-emerald-800 mb-1"></p>
+                            <p id="explanation-text-zh" class="text-xs font-semibold text-emerald-700 bg-emerald-100/60 p-2 rounded-lg"></p>
+                        </div>
+                    </div>
+                    <button id="next-btn" onclick="nextQuestion()" class="btn-touch w-full mt-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-xl shadow text-sm flex items-center justify-center gap-2">
+                        下一題 Next Question <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ================= RESULT / VICTORY SCREEN ================= -->
+        <div id="result-screen" class="hidden glass-card rounded-3xl p-6 md:p-10 flex-col items-center text-center my-auto animate-pop">
+            <div id="trophy-icon" class="text-6xl text-amber-400 mb-2">
+                <i class="fa-solid fa-trophy"></i>
+            </div>
+            
+            <h2 id="result-title" class="font-heading text-3xl md:text-4xl font-bold text-indigo-950 mb-1">
+                Mission Completed!
+            </h2>
+            <p id="result-subtitle" class="text-gray-600 font-bold mb-4">溫習完成！表現太棒了！</p>
+
+            <!-- Star Rating -->
+            <div class="flex justify-center gap-3 text-4xl mb-6" id="stars-container">
+                <i class="fa-solid fa-star text-amber-400"></i>
+                <i class="fa-solid fa-star text-amber-400"></i>
+                <i class="fa-solid fa-star text-amber-400"></i>
+            </div>
+
+            <!-- Stats Box -->
+            <div class="grid grid-cols-2 gap-4 w-full max-w-sm mb-6">
+                <div class="bg-indigo-50 border border-indigo-200 rounded-2xl p-3 text-center">
+                    <div class="text-xs font-extrabold text-indigo-500 uppercase">Final Score</div>
+                    <div id="final-score" class="text-3xl font-black text-indigo-900">0</div>
+                </div>
+                <div class="bg-purple-50 border border-purple-200 rounded-2xl p-3 text-center">
+                    <div class="text-xs font-extrabold text-purple-500 uppercase">Accuracy</div>
+                    <div id="accuracy-text" class="text-3xl font-black text-purple-900">0%</div>
+                </div>
+            </div>
+
+            <!-- Mistake Review Summary Section -->
+            <div id="mistakes-section" class="w-full max-w-lg text-left mb-6 hidden">
+                <h3 class="font-bold text-gray-800 text-sm mb-2 flex items-center gap-2">
+                    <i class="fa-solid fa-book-open text-indigo-600"></i> 錯題溫習備忘 Check Mistakes:
+                </h3>
+                <div id="mistakes-list" class="max-h-40 overflow-y-auto space-y-2 pr-2">
+                    <!-- Injected via JS -->
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex gap-4 w-full max-w-sm">
+                <button onclick="startGame()" class="btn-touch flex-1 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold py-3 px-4 rounded-xl shadow-lg flex items-center justify-center gap-2 text-base">
+                    <i class="fa-solid fa-rotate-right"></i> 再試一次 Retry
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- AUDIO SYNTHESIZER SCRIPT (Web Audio API - No external sound assets required) -->
+    <script>
+        class SoundFX {
+            constructor() {
+                this.ctx = null;
+            }
+
+            init() {
+                if (!this.ctx) {
+                    this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+            }
+
+            playCorrect() {
+                if (gameState.isMuted) return;
+                this.init();
+                const now = this.ctx.currentTime;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(523.25, now); // C5
+                osc.frequency.exponentialRampToValueAtTime(659.25, now + 0.1); // E5
+                osc.frequency.exponentialRampToValueAtTime(783.99, now + 0.2); // G5
+
+                gain.gain.setValueAtTime(0.3, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.35);
+
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start(now);
+                osc.stop(now + 0.35);
+            }
+
+            playWrong() {
+                if (gameState.isMuted) return;
+                this.init();
+                const now = this.ctx.currentTime;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(220, now); // A3
+                osc.frequency.linearRampToValueAtTime(130, now + 0.25); // C3
+
+                gain.gain.setValueAtTime(0.3, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start(now);
+                osc.stop(now + 0.3);
+            }
+
+            playStreak() {
+                if (gameState.isMuted) return;
+                this.init();
+                const now = this.ctx.currentTime;
+                const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+                notes.forEach((freq, idx) => {
+                    const osc = this.ctx.createOscillator();
+                    const gain = this.ctx.createGain();
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(freq, now + idx * 0.06);
+                    gain.gain.setValueAtTime(0.2, now + idx * 0.06);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + idx * 0.06 + 0.15);
+                    osc.connect(gain);
+                    gain.connect(this.ctx.destination);
+                    osc.start(now + idx * 0.06);
+                    osc.stop(now + idx * 0.06 + 0.15);
+                });
+            }
+
+            playFanfare() {
+                if (gameState.isMuted) return;
+                this.init();
+                const now = this.ctx.currentTime;
+                const notes = [440, 554.37, 659.25, 880];
+                notes.forEach((freq, idx) => {
+                    const osc = this.ctx.createOscillator();
+                    const gain = this.ctx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(freq, now + idx * 0.1);
+                    gain.gain.setValueAtTime(0.3, now + idx * 0.1);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + idx * 0.1 + 0.4);
+                    osc.connect(gain);
+                    gain.connect(this.ctx.destination);
+                    osc.start(now + idx * 0.1);
+                    osc.stop(now + idx * 0.1 + 0.4);
+                });
+            }
+        }
+
+        const sound = new SoundFX();
+    </script>
+
+    <!-- MAIN GAME LOGIC & QUESTION DATABASE -->
+    <script>
+        // QUESTION BANK - Tailored for Primary 6 LEAP / Elect Syllabus
+        const questionBank = [
+            // 1. Present Continuous vs Present Simple
+            {
+                type: "mc",
+                topic: "Present Cont. vs Simple",
+                question: "Look! The volunteers ________ food boxes for the poor families right now.",
+                options: ["pack", "are packing", "packed", "have packed"],
+                correct: 1,
+                signalWord: "Look! / right now",
+                ruleEn: "Use Present Continuous (am/is/are + V-ing) for actions happening right now.",
+                ruleZh: "看見提示詞 Look! 或 right now，代表動作「正在進行」，需使用現在進行式 (am/is/are + V-ing)。"
+            },
+            // 2. Present Perfect (since / for)
+            {
+                type: "mc",
+                topic: "Present Perfect Tense",
+                question: "My uncle ________ as a vet in this animal shelter since 2021.",
+                options: ["worked", "works", "has worked", "is working"],
+                correct: 2,
+                signalWord: "since 2021",
+                ruleEn: "Use Present Perfect (has/have + p.p.) with 'since' to show an action started in the past and continues now.",
+                ruleZh: "看見 'since' (自從……以來)，要搭配現在完成式 (has/have + 過去分詞 p.p.)。"
+            },
+            // 3. Conditional Type 1
+            {
+                type: "mc",
+                topic: "Conditional Type 1",
+                question: "If it ________ tomorrow, we will cancel the outdoor charity sale.",
+                options: ["rains", "will rain", "rained", "is raining"],
+                correct: 0,
+                signalWord: "If + Simple Present",
+                ruleEn: "In Type 1 Conditionals: If-clause uses Simple Present, main clause uses Future (will + base verb).",
+                ruleZh: "第一類條件句結構：If 從句用「一般現在式 (rains)」，主句用「將來式 (will cancel)」。"
+            },
+            // 4. Past Simple vs Past Continuous
+            {
+                type: "mc",
+                topic: "Past Continuous",
+                question: "While Mary ________ a storybook, the phone suddenly rang.",
+                options: ["reads", "was reading", "has read", "will read"],
+                correct: 1,
+                signalWord: "While ... (Past Cont.)",
+                ruleEn: "Use Past Continuous (was/were + V-ing) after 'While' for a long background action interrupted by a short action.",
+                ruleZh: "在 'While' 後面表示「當時正在進行的長動作」，需使用過去進行式 (was/were + reading)。"
+            },
+            // 5. Present Perfect (already / yet)
+            {
+                type: "mc",
+                topic: "Present Perfect Tense",
+                question: "Have you donated your old toys to the charity fair ________?",
+                options: ["already", "ever", "yet", "just"],
+                correct: 2,
+                signalWord: "yet (Questions/Negatives)",
+                ruleEn: "Use 'yet' at the end of questions or negative sentences in the Present Perfect Tense.",
+                ruleZh: "'yet' 通常放在現在完成式的「問句」或「否定句」句尾，表示「還沒」或「已經……了嗎」。"
+            },
+            // 6. Future Tense (be going to vs will)
+            {
+                type: "mc",
+                topic: "Future Tense",
+                question: "Look at those dark clouds in the sky! It ________ soon.",
+                options: ["is going to rain", "rained", "rains", "has rained"],
+                correct: 0,
+                signalWord: "Look at dark clouds (Evidence)",
+                ruleEn: "Use 'be going to' when there is clear visual evidence in the present for a future event.",
+                ruleZh: "當有明確眼前的跡象（如烏雲密佈）時，未來式應用 'be going to' 表示必然發生。"
+            },
+            // 7. Signal Word Matching Interactive Challenge
+            {
+                type: "match",
+                topic: "Signal Word Challenge",
+                instruction: "Tap a Signal Word, then tap its matching Tense! (配對時間詞與時態)",
+                pairs: [
+                    { word: "since 2020", tense: "Present Perfect" },
+                    { word: "Look! / now", tense: "Present Cont." },
+                    { word: "every day", tense: "Simple Present" },
+                    { word: "yesterday", tense: "Simple Past" }
+                ],
+                ruleEn: "Signal words give clues to choose the correct verb tense accurately!",
+                ruleZh: "認清時間詞能幫你精確判定時態：since ? 完成式；Look! ? 進行式；every day ? 現在式；yesterday ? 過去式。"
+            },
+            // 8. Sentence Builder Challenge (Conditional Type 1)
+            {
+                type: "builder",
+                topic: "Conditional Clause Builder",
+                instruction: "Tap the blocks in order to build a correct Type 1 Conditional sentence!",
+                targetSentence: ["If Ben", "works hard,", "he will become", "a famous architect."],
+                shuffledWords: ["he will become", "works hard,", "a famous architect.", "If Ben"],
+                ruleEn: "Conditional Type 1 structure: If + subject + Present Simple, subject + will + base verb.",
+                ruleZh: "條件句順序：If + 主語 + 一般現在式動詞 ， 主語 + will + 原形動詞。"
+            },
+            // 9. Simple Present vs Simple Past
+            {
+                type: "mc",
+                topic: "Simple Present vs Past",
+                question: "Tom usually ________ his grandparents on Sundays, but last Sunday he stayed at home.",
+                options: ["visited", "visits", "is visiting", "has visited"],
+                correct: 1,
+                signalWord: "usually (Habit)",
+                ruleEn: "Use Simple Present for regular habits (indicated by 'usually').",
+                ruleZh: "提示詞 'usually' 代表頻率或習慣，動詞需用一般現在式 (visits)。"
+            },
+            // 10. Sentence Builder (Present Perfect)
+            {
+                type: "builder",
+                topic: "Present Perfect Builder",
+                instruction: "Tap the words in order to form a Present Perfect sentence!",
+                targetSentence: ["We have already", "packed two hundred", "gift boxes for", "the children."],
+                shuffledWords: ["packed two hundred", "the children.", "We have already", "gift boxes for"],
+                ruleEn: "Present Perfect sentence structure: Subject + have/has + already + p.p. + object.",
+                ruleZh: "完成式句型：主語 (We) + have/has already + 過去分詞 (packed) + 賓語。"
+            }
+        ];
+
+        // GAME STATE
+        let gameState = {
+            score: 0,
+            lives: 3,
+            streak: 0,
+            currentQIndex: 0,
+            isMuted: false,
+            selectedMatchWord: null,
+            matchedPairsCount: 0,
+            builderSelectedWords: [],
+            mistakes: []
+        };
+
+        // DOM ELEMENTS
+        const startScreen = document.getElementById('start-screen');
+        const gameScreen = document.getElementById('game-screen');
+        const resultScreen = document.getElementById('result-screen');
+        const questionBody = document.getElementById('question-body');
+        const explanationModal = document.getElementById('explanation-modal');
+
+        // START GAME
+        function startGame() {
+            sound.init();
+            gameState.score = 0;
+            gameState.lives = 3;
+            gameState.streak = 0;
+            gameState.currentQIndex = 0;
+            gameState.mistakes = [];
+
+            updateHUD();
+            startScreen.classList.add('hidden');
+            resultScreen.classList.add('hidden');
+            resultScreen.classList.remove('flex');
+            gameScreen.classList.remove('hidden');
+            gameScreen.classList.add('flex');
+
+            loadQuestion();
+        }
+
+        // UPDATE HUD (Hearts, Score, Streak, Progress)
+        function updateHUD() {
+            // Score
+            document.getElementById('score-text').innerText = gameState.score;
+            
+            // Streak
+            const streakBadge = document.getElementById('streak-badge');
+            if (gameState.streak >= 2) {
+                streakBadge.classList.remove('hidden');
+                document.getElementById('streak-count').innerText = gameState.streak;
+            } else {
+                streakBadge.classList.add('hidden');
+            }
+
+            // Hearts
+            const heartsContainer = document.getElementById('lives-container');
+            heartsContainer.innerHTML = '';
+            for (let i = 0; i < 3; i++) {
+                if (i < gameState.lives) {
+                    heartsContainer.innerHTML += `<i class="fa-solid fa-heart text-red-500 text-2xl animate-pop"></i>`;
+                } else {
+                    heartsContainer.innerHTML += `<i class="fa-solid fa-heart text-gray-300 text-2xl"></i>`;
+                }
+            }
+
+            // Progress
+            const total = questionBank.length;
+            const current = gameState.currentQIndex + 1;
+            document.getElementById('q-progress-text').innerText = `Question ${current} / ${total}`;
+            const pct = (gameState.currentQIndex / total) * 100;
+            document.getElementById('progress-bar').style.width = `${pct}%`;
+        }
+
+        // LOAD QUESTION
+        function loadQuestion() {
+            explanationModal.classList.add('hidden');
+            questionBody.innerHTML = '';
+            updateHUD();
+
+            const q = questionBank[gameState.currentQIndex];
+            document.getElementById('grammar-topic').innerText = `Topic: ${q.topic}`;
+
+            if (q.type === 'mc') {
+                renderMCQuestion(q);
+            } else if (q.type === 'match') {
+                renderMatchQuestion(q);
+            } else if (q.type === 'builder') {
+                renderBuilderQuestion(q);
+            }
+        }
+
+        // 1. RENDER MULTIPLE CHOICE QUESTION
+        function renderMCQuestion(q) {
+            document.getElementById('question-tag').innerText = "Multiple Choice 選擇題";
+            
+            const html = `
+                <h3 class="text-xl md:text-2xl font-black text-gray-800 mb-6 leading-relaxed">
+                    ${q.question.replace('________', '<span class="inline-block border-b-4 border-indigo-600 px-4 py-0.5 text-indigo-700 bg-indigo-50 rounded-lg">?</span>')}
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    ${q.options.map((opt, idx) => `
+                        <button onclick="handleMCOption(${idx})" class="btn-touch mc-option-btn w-full bg-white hover:bg-indigo-50 border-2 border-indigo-200 text-indigo-950 font-bold text-lg p-4 rounded-2xl text-left shadow-sm flex items-center justify-between">
+                            <span><span class="inline-flex w-8 h-8 rounded-full bg-indigo-100 text-indigo-700 text-sm items-center justify-center mr-3 font-black">${String.fromCharCode(65 + idx)}</span>${opt}</span>
+                            <i class="fa-regular fa-circle text-gray-300"></i>
+                        </button>
+                    `).join('')}
+                </div>
+            `;
+            questionBody.innerHTML = html;
+        }
+
+        // HANDLE MC SELECTION
+        function handleMCOption(selectedIdx) {
+            const q = questionBank[gameState.currentQIndex];
+            const buttons = document.querySelectorAll('.mc-option-btn');
+            
+            // Disable all buttons to prevent spam
+            buttons.forEach(btn => btn.onclick = null);
+
+            if (selectedIdx === q.correct) {
+                // Correct
+                sound.playCorrect();
+                buttons[selectedIdx].classList.remove('bg-white', 'border-indigo-200');
+                buttons[selectedIdx].classList.add('bg-emerald-100', 'border-emerald-500', 'text-emerald-900');
+                buttons[selectedIdx].querySelector('.fa-regular').className = "fa-solid fa-circle-check text-emerald-600 text-xl";
+
+                gameState.streak++;
+                if (gameState.streak >= 3) sound.playStreak();
+                const bonus = gameState.streak >= 2 ? 150 : 100;
+                gameState.score += bonus;
+                
+                showExplanation(true, q);
+            } else {
+                // Wrong
+                sound.playWrong();
+                buttons[selectedIdx].classList.remove('bg-white', 'border-indigo-200');
+                buttons[selectedIdx].classList.add('bg-red-100', 'border-red-500', 'text-red-900', 'animate-shake');
+                buttons[selectedIdx].querySelector('.fa-regular').className = "fa-solid fa-circle-xmark text-red-600 text-xl";
+
+                // Highlight correct one
+                buttons[q.correct].classList.remove('bg-white', 'border-indigo-200');
+                buttons[q.correct].classList.add('bg-emerald-100', 'border-emerald-500', 'text-emerald-900');
+
+                gameState.streak = 0;
+                gameState.lives--;
+                gameState.mistakes.push({
+                    q: q.question,
+                    yourAns: q.options[selectedIdx],
+                    correctAns: q.options[q.correct],
+                    rule: q.ruleZh
+                });
+
+                showExplanation(false, q);
+            }
+            updateHUD();
+        }
+
+        // 2. RENDER MATCH QUESTION
+        function renderMatchQuestion(q) {
+            document.getElementById('question-tag').innerText = "Signal Word Match 時間詞配對";
+            gameState.selectedMatchWord = null;
+            gameState.matchedPairsCount = 0;
+
+            // Shuffle words & tenses
+            const words = q.pairs.map(p => p.word).sort(() => Math.random() - 0.5);
+            const tenses = [...new Set(q.pairs.map(p => p.tense))].sort(() => Math.random() - 0.5);
+
+            const html = `
+                <p class="text-sm md:text-base font-bold text-gray-700 mb-4 bg-indigo-50 p-3 rounded-xl border border-indigo-200">
+                    <i class="fa-solid fa-hand-pointer text-indigo-600 mr-1"></i> ${q.instruction}
+                </p>
+                <div class="grid grid-cols-2 gap-4">
+                    <!-- Left: Words -->
+                    <div class="flex flex-col gap-2.5">
+                        <span class="text-xs font-black text-indigo-900 uppercase">1. Select Signal Word</span>
+                        ${words.map(w => `
+                            <button onclick="handleMatchWordSelect(this, '${w}')" class="match-word-btn btn-touch bg-white border-2 border-indigo-200 text-indigo-950 font-bold p-3 rounded-xl text-center text-sm shadow-sm">
+                                ${w}
+                            </button>
+                        `).join('')}
+                    </div>
+                    <!-- Right: Tenses -->
+                    <div class="flex flex-col gap-2.5">
+                        <span class="text-xs font-black text-indigo-900 uppercase">2. Select Target Tense</span>
+                        ${tenses.map(t => `
+                            <button onclick="handleMatchTenseSelect(this, '${t}')" class="match-tense-btn btn-touch bg-purple-50 border-2 border-purple-200 text-purple-950 font-bold p-3 rounded-xl text-center text-sm shadow-sm">
+                                ${t}
+                            </button>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+            questionBody.innerHTML = html;
+        }
+
+        function handleMatchWordSelect(btn, word) {
+            sound.init();
+            document.querySelectorAll('.match-word-btn').forEach(b => {
+                if (!b.classList.contains('bg-emerald-100')) {
+                    b.classList.remove('border-amber-500', 'bg-amber-100', 'ring-2', 'ring-amber-400');
+                }
+            });
+            btn.classList.add('border-amber-500', 'bg-amber-100', 'ring-2', 'ring-amber-400');
+            gameState.selectedMatchWord = { btn, word };
+        }
+
+        function handleMatchTenseSelect(tenseBtn, tense) {
+            if (!gameState.selectedMatchWord) return;
+
+            const q = questionBank[gameState.currentQIndex];
+            const wordObj = gameState.selectedMatchWord;
+            const targetPair = q.pairs.find(p => p.word === wordObj.word);
+
+            if (targetPair && targetPair.tense === tense) {
+                // Correct Match
+                sound.playCorrect();
+                wordObj.btn.className = "bg-emerald-100 border-2 border-emerald-500 text-emerald-900 font-bold p-3 rounded-xl text-center text-sm shadow-sm opacity-60";
+                wordObj.btn.onclick = null;
+
+                tenseBtn.classList.add('animate-pop');
+                setTimeout(() => tenseBtn.classList.remove('animate-pop'), 300);
+
+                gameState.selectedMatchWord = null;
+                gameState.matchedPairsCount++;
+
+                if (gameState.matchedPairsCount === q.pairs.length) {
+                    // Completed all matches
+                    gameState.score += 200;
+                    gameState.streak++;
+                    showExplanation(true, q);
+                }
+            } else {
+                // Wrong Match
+                sound.playWrong();
+                wordObj.btn.classList.add('animate-shake', 'bg-red-100', 'border-red-400');
+                setTimeout(() => {
+                    wordObj.btn.classList.remove('animate-shake', 'bg-red-100', 'border-red-400', 'border-amber-500', 'bg-amber-100', 'ring-2', 'ring-amber-400');
+                }, 400);
+                gameState.selectedMatchWord = null;
+            }
+        }
+
+        // 3. RENDER SENTENCE BUILDER QUESTION
+        function renderBuilderQuestion(q) {
+            document.getElementById('question-tag').innerText = "Sentence Builder 句子排序";
+            gameState.builderSelectedWords = [];
+
+            const html = `
+                <p class="text-sm font-bold text-gray-700 mb-3">
+                    <i class="fa-solid fa-puzzle-piece text-indigo-600 mr-1"></i> ${q.instruction}
+                </p>
+                <!-- Target Display Slot -->
+                <div id="builder-target-slot" class="min-h-[64px] bg-indigo-50/80 border-2 border-dashed border-indigo-300 rounded-2xl p-3 flex flex-wrap gap-2 items-center mb-6">
+                    <span class="text-gray-400 text-xs italic font-bold select-none" id="builder-placeholder">Tap word blocks below in order...</span>
+                </div>
+
+                <!-- Word Blocks Pool -->
+                <div class="flex flex-wrap gap-2 justify-center" id="builder-words-pool">
+                    ${q.shuffledWords.map((word, idx) => `
+                        <button onclick="handleBuilderWordClick(this, '${word.replace(/'/g, "\\'")}')" class="btn-touch builder-word-btn bg-white border-2 border-indigo-200 hover:border-indigo-400 text-indigo-950 font-bold text-base px-4 py-2.5 rounded-xl shadow-sm">
+                            ${word}
+                        </button>
+                    `).join('')}
+                </div>
+
+                <div class="flex justify-end gap-2 mt-4">
+                    <button onclick="resetBuilder()" class="text-xs text-gray-500 hover:text-gray-700 font-bold px-3 py-1">
+                        <i class="fa-solid fa-arrows-rotate"></i> Reset 重置
+                    </button>
+                </div>
+            `;
+            questionBody.innerHTML = html;
+        }
+
+        function handleBuilderWordClick(btn, word) {
+            sound.init();
+            const q = questionBank[gameState.currentQIndex];
+            const placeholder = document.getElementById('builder-placeholder');
+            if (placeholder) placeholder.style.display = 'none';
+
+            // Hide from pool
+            btn.style.visibility = 'hidden';
+
+            // Add to target array
+            gameState.builderSelectedWords.push({ word, btn });
+
+            // Render pill in target slot
+            const targetSlot = document.getElementById('builder-target-slot');
+            const pill = document.createElement('span');
+            pill.className = "bg-indigo-600 text-white font-bold text-sm px-3 py-1.5 rounded-xl shadow-md animate-pop inline-flex items-center gap-1 cursor-pointer";
+            pill.innerText = word;
+            pill.onclick = () => removeBuilderWord(word, btn, pill);
+            targetSlot.appendChild(pill);
+
+            // Check if complete
+            if (gameState.builderSelectedWords.length === q.targetSentence.length) {
+                const isCorrect = gameState.builderSelectedWords.every((item, idx) => item.word === q.targetSentence[idx]);
+                if (isCorrect) {
+                    sound.playCorrect();
+                    gameState.score += 200;
+                    gameState.streak++;
+                    showExplanation(true, q);
+                } else {
+                    sound.playWrong();
+                    targetSlot.classList.add('animate-shake', 'border-red-400', 'bg-red-50');
+                    setTimeout(() => {
+                        targetSlot.classList.remove('animate-shake', 'border-red-400', 'bg-red-50');
+                        resetBuilder();
+                    }, 600);
+                }
+            }
+        }
+
+        function removeBuilderWord(word, btn, pill) {
+            pill.remove();
+            btn.style.visibility = 'visible';
+            gameState.builderSelectedWords = gameState.builderSelectedWords.filter(item => item.btn !== btn);
+            if (gameState.builderSelectedWords.length === 0) {
+                const placeholder = document.getElementById('builder-placeholder');
+                if (placeholder) placeholder.style.display = 'inline';
+            }
+        }
+
+        function resetBuilder() {
+            const q = questionBank[gameState.currentQIndex];
+            renderBuilderQuestion(q);
+        }
+
+        // SHOW BILINGUAL EXPLANATION MODAL
+        function showExplanation(isCorrect, q) {
+            explanationModal.classList.remove('hidden');
+            const titleEl = document.getElementById('explanation-title');
+            const iconEl = document.getElementById('explanation-icon');
+            const enEl = document.getElementById('explanation-text-en');
+            const zhEl = document.getElementById('explanation-text-zh');
+
+            if (isCorrect) {
+                explanationModal.className = "mt-4 bg-emerald-50 border-2 border-emerald-300 rounded-2xl p-4 text-emerald-950 animate-pop";
+                iconEl.className = "text-2xl text-emerald-600 mt-0.5";
+                iconEl.innerHTML = `<i class="fa-solid fa-circle-check"></i>`;
+                titleEl.innerText = "Correct! 答對了！";
+                titleEl.className = "font-extrabold text-base mb-1 text-emerald-900";
+            } else {
+                explanationModal.className = "mt-4 bg-red-50 border-2 border-red-300 rounded-2xl p-4 text-red-950 animate-pop";
+                iconEl.className = "text-2xl text-red-600 mt-0.5";
+                iconEl.innerHTML = `<i class="fa-solid fa-circle-xmark"></i>`;
+                titleEl.innerText = "Keep Trying! 繼續努力！";
+                titleEl.className = "font-extrabold text-base mb-1 text-red-900";
+            }
+
+            enEl.innerText = `?? Rule: ${q.ruleEn}`;
+            zhEl.innerText = `解析：${q.ruleZh}`;
+        }
+
+        // NEXT QUESTION OR END GAME
+        function nextQuestion() {
+            if (gameState.lives <= 0 || gameState.currentQIndex >= questionBank.length - 1) {
+                endGame();
+            } else {
+                gameState.currentQIndex++;
+                loadQuestion();
+            }
+        }
+
+        // END GAME SCREEN
+        function endGame() {
+            sound.playFanfare();
+            gameScreen.classList.add('hidden');
+            gameScreen.classList.remove('flex');
+            resultScreen.classList.remove('hidden');
+            resultScreen.classList.add('flex');
+
+            const total = questionBank.length;
+            const accuracy = Math.round(((total - gameState.mistakes.length) / total) * 100);
+
+            document.getElementById('final-score').innerText = gameState.score;
+            document.getElementById('accuracy-text').innerText = `${accuracy}%`;
+
+            // Stars calculation
+            const starsContainer = document.getElementById('stars-container');
+            let starsCount = 1;
+            if (accuracy >= 80 && gameState.lives === 3) starsCount = 3;
+            else if (accuracy >= 60) starsCount = 2;
+
+            starsContainer.innerHTML = '';
+            for (let i = 0; i < 3; i++) {
+                if (i < starsCount) {
+                    starsContainer.innerHTML += `<i class="fa-solid fa-star text-amber-400 animate-pop" style="animation-delay: ${i * 0.15}s"></i>`;
+                } else {
+                    starsContainer.innerHTML += `<i class="fa-solid fa-star text-gray-300"></i>`;
+                }
+            }
+
+            // Mistakes Summary
+            const mistakesSection = document.getElementById('mistakes-section');
+            const mistakesList = document.getElementById('mistakes-list');
+            if (gameState.mistakes.length > 0) {
+                mistakesSection.classList.remove('hidden');
+                mistakesList.innerHTML = gameState.mistakes.map(m => `
+                    <div class="bg-red-50 border border-red-200 rounded-xl p-3 text-xs text-red-950">
+                        <div class="font-bold text-gray-800 mb-1">${m.q}</div>
+                        <div class="text-red-700 font-semibold">? Your answer: ${m.yourAns || 'Incorrect'}</div>
+                        <div class="text-emerald-700 font-semibold">? Correct answer: ${m.correctAns}</div>
+                        <div class="text-gray-600 mt-1 italic">${m.rule}</div>
+                    </div>
+                `).join('');
+            } else {
+                mistakesSection.classList.add('hidden');
+            }
+        }
+
+        // TOGGLE SOUND
+        function toggleSound() {
+            gameState.isMuted = !gameState.isMuted;
+            const btn = document.getElementById('sound-btn');
+            btn.innerHTML = gameState.isMuted 
+                ? `<i class="fa-solid fa-volume-xmark text-red-500"></i>`
+                : `<i class="fa-solid fa-volume-high text-gray-700"></i>`;
+        }
+    </script>
+</body>
+</html>
